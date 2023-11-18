@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>List Creation</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="lanzafruit_list.html">LanzaFruit List</a></li>
+            <li><a href="frozen_list.html">Frozen List</a></li>
+            <li><a href="emicela_list.html">Emicela List</a></li>
+        </ul>
+    </nav>
+    <h1>LanzaFruit List</h1>
+    
+    <label for="supermarket">Pedido</label>
+    <select id="supermarket" onchange="updateSupermarketName()">
+        <option value="">Select an option</option>
+        <option value="Option 1">Indian Aroma</option>
+        <option value="Option 2">Bollywood Pto Del Carmen</option>
+        <option value="Option 3">Imagine India</option>
+    </select>
+
+    <button onclick="resetQuantities()">Reset</button>
+    
+    <div class="list-container">
+        <div class="list-item">
+            <span class="item-name">Tomate</span>
+            <div class="button-container">
+                <button onclick="updateQuantity('tomate', -1)">-</button>
+                <span id="tomate" class="quantity">0</span>
+                <button onclick="updateQuantity('tomate', 1)">+</button>
+            </div>
+        </div>
+    
+        <div class="list-item">
+            <span class="item-name">Limon</span>
+            <div class="button-container">
+                <button onclick="updateQuantity('limon', -1)">-</button>
+                <span id="limon" class="quantity">0</span>
+                <button onclick="updateQuantity('limon', 1)">+</button>
+            </div>
+        </div>
+    
+        <div class="list-item">
+            <span class="item-name">Pepino</span>
+            <div class="button-container">
+                <button onclick="updateQuantity('pepino', -1)">-</button>
+                <span id="pepino" class="quantity">0</span>
+                <button onclick="updateQuantity('pepino', 1)">+</button>
+            </div>
+        </div>
+
+        <div class="list-item">
+            <span class="item-name">Naranjas</span>
+            <div class="button-container">
+                <button onclick="updateQuantity('naranjas', -1)">-</button>
+                <span id="naranjas" class="quantity">0</span>
+                <button onclick="updateQuantity('naranjas', 1)">+</button>
+            </div>
+        </div>
+
+    
+        <!-- Add more items here using the same pattern -->
+    </div>
+    
+    <button onclick="submitQuantities()">Create List</button>
+    
+    <div id="result" class="output-box"></div>
+
+    <button class="copy-button" onclick="copyToClipboard()">Copy</button>
+    
+    <script>
+        let quantities = {
+            tomate: 0,
+            limon: 0,
+            pepino: 0,
+            naranjas: 0,
+            // Add more items with initial quantity 0
+        };
+
+        let nameSupermarket = ""; // Variable to store the supermarket name
+
+        function updateSupermarketName() {
+            let supermarketSelect = document.getElementById("supermarket");
+            let selectedOption = supermarketSelect.options[supermarketSelect.selectedIndex];
+            nameSupermarket = selectedOption.textContent;
+        }
+
+        function updateQuantity(item, increment) {
+            if (increment === -1 && quantities[item] === 0) {
+                return; // Ignore decrement if quantity is already zero
+            }
+            
+            quantities[item] += increment;
+            document.getElementById(item).innerText = quantities[item];
+        }
+
+        function resetQuantities() {
+            for (let item in quantities) {
+                quantities[item] = 0;
+                document.getElementById(item).innerText = '0';
+            }
+            document.getElementById('result').innerHTML = '';
+        }
+
+        function submitQuantities() {
+            let resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = ''; // Clear previous results
+
+            // Display the supermarket name before displaying the items
+            resultDiv.textContent = `Pedido ${nameSupermarket}\n`;
+
+            let output = '';
+            for (let item in quantities) {
+                if (quantities[item] > 0) {
+                    output += `${item.charAt(0).toUpperCase() + item.slice(1)}: ${quantities[item]}\n`;
+                }
+            }
+            
+            if (output === '') {
+                resultDiv.textContent += 'No items selected.';
+            } else {
+                resultDiv.textContent += output;
+            }
+        }
+
+        function copyToClipboard() {
+            let resultDiv = document.getElementById('result');
+            let text = resultDiv.textContent;
+            let tempElement = document.createElement('textarea');
+            tempElement.value = text;
+            document.body.appendChild(tempElement);
+            tempElement.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempElement);
+            alert('Copied to clipboard. Paste it somewhere else.');
+        }
+    </script>
+</body>
+</html>
